@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-import main.Noodi;
+import main.Solmu;
 import main.Reitinhaku;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,7 +44,7 @@ public class Reitinhakutest {
   {'.', '.', '.', '.', '.' ,'#'},
   {'#', '#', '#', '#', '.' ,'#'},};
   
-   reitinhaku = new Reitinhaku();
+   reitinhaku = new Reitinhaku(sokkelo);
     }
     
     @After
@@ -57,20 +57,74 @@ public class Reitinhakutest {
     // public void hello() {}
     
     @Test
-    public void TestaaSokkelo() {
-  char[][] odotettu = new char[][] {
-  {'.', '#', '#', '#', '#' ,'#'},
-  {'.', '#', '#', '.', '.', '#'},
-  {'.', '#', '#', 'X', '.' ,'#'},
-  {'.', '.', '.', 'X', 'X' ,'#'},
-  {'#', '#', '#', '#', 'X' ,'#'},
-  {'.', '#', '#', 'X', 'X', '#'},
-  {'.', '#', '#', 'X', '#' ,'#'},
-  {'.', 'X', 'X', 'X', '.' ,'#'},
-  {'#', '#', '#', '#', '.' ,'#'},};
+    public void TestaaSokkeloAlaVasenOikeaYlös() {
+        char[][] odotettu = new char[][] {
+        {'.', '#', '#', '#', '#' ,'#'},
+        {'.', '#', '#', '.', '.', '#'},
+        {'.', '#', '#', 'X', '.' ,'#'},
+        {'.', '.', '.', 'X', 'X' ,'#'},
+        {'#', '#', '#', '#', 'X' ,'#'},
+        {'.', '#', '#', 'X', 'X', '#'},
+        {'.', '#', '#', 'X', '#' ,'#'},
+        {'.', 'X', 'X', 'X', '.' ,'#'},
+        {'#', '#', '#', '#', '.' ,'#'},};
         
-        Noodi aloitus = new Noodi(7, 0);
-        Noodi maali = new Noodi(2, 3);
-    assertEquals(odotettu, reitinhaku.etsiReitti(sokkelo, aloitus, maali));
+        Solmu aloitus = new Solmu(7, 0);
+        Solmu maali = new Solmu(2, 3);
+    assertEquals(odotettu, reitinhaku.etsiReitti(aloitus, maali));
+    }
+    
+    @Test
+    public void TestaaSokkeloYläOikeaVasenAlas() {
+        char[][] odotettu = new char[][] {
+        {'.', '#', '#', '#', '#' ,'#'},
+        {'.', '#', '#', '.', '.', '#'},
+        {'.', '#', '#', '.', 'X' ,'#'},
+        {'.', '.', '.', '.', 'X' ,'#'},
+        {'#', '#', '#', '#', 'X' ,'#'},
+        {'.', '#', '#', 'X', 'X', '#'},
+        {'.', '#', '#', 'X', '#' ,'#'},
+        {'X', 'X', 'X', 'X', '.' ,'#'},
+        {'#', '#', '#', '#', '.' ,'#'},};
+        
+        Solmu aloitus = new Solmu(1, 4);
+        Solmu maali = new Solmu(7, 0);
+    assertEquals(odotettu, reitinhaku.etsiReitti(aloitus, maali));
+    }
+    
+        @Test
+    public void TestaaSokkeloYläVasenOikeaAlas() {
+        char[][] odotettu = new char[][] {
+        {'.', '#', '#', '#', '#' ,'#'},
+        {'X', '#', '#', '.', '.', '#'},
+        {'X', '#', '#', '.', '.' ,'#'},
+        {'X', 'X', 'X', 'X', 'X' ,'#'},
+        {'#', '#', '#', '#', 'X' ,'#'},
+        {'.', '#', '#', 'X', 'X', '#'},
+        {'.', '#', '#', 'X', '#' ,'#'},
+        {'.', '.', '.', 'X', 'X' ,'#'},
+        {'#', '#', '#', '#', 'X' ,'#'},};
+        
+        Solmu aloitus = new Solmu(0, 0);
+        Solmu maali = new Solmu(8, 4);
+    assertEquals(odotettu, reitinhaku.etsiReitti(aloitus, maali));
+    }
+        
+        @Test
+    public void TestaaSokkeloAlaOikeaVasenYlös() {
+        char[][] odotettu = new char[][] {
+        {'X', '#', '#', '#', '#' ,'#'},
+        {'X', '#', '#', '.', '.', '#'},
+        {'X', '#', '#', '.', '.' ,'#'},
+        {'X', 'X', 'X', 'X', 'X' ,'#'},
+        {'#', '#', '#', '#', 'X' ,'#'},
+        {'.', '#', '#', 'X', 'X', '#'},
+        {'.', '#', '#', 'X', '#' ,'#'},
+        {'.', '.', '.', 'X', 'X' ,'#'},
+        {'#', '#', '#', '#', '.' ,'#'},};
+        
+        Solmu aloitus = new Solmu(8, 4);
+        Solmu maali = new Solmu(0, 0);
+    assertEquals(odotettu, reitinhaku.etsiReitti(aloitus, maali));
     }
 }

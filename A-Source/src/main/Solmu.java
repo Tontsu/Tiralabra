@@ -9,20 +9,20 @@ package main;
  * @author Tontsu
  */
 
-public class Noodi {
+public class Solmu {
     
     private final int x;
     private final int y;
     private int alkuetäisyys;
     private int maalietäisyys;
-    Noodi isäntä;
+    Solmu isäntä;
     
-   public Noodi (int y, int x) {
+   public Solmu (int y, int x) {
          this.x = x;
          this.y = y;
     }
     
-    public Noodi (int y, int x, int alku, int maali, Noodi isäntä) {
+    public Solmu (int y, int x, int alku, int maali, Solmu isäntä) {
          this.x = x;
          this.y = y;
          this.alkuetäisyys = alku;
@@ -46,7 +46,7 @@ public class Noodi {
         return y;
     }
 
-    public Noodi getIsäntä() {
+    public Solmu getIsäntä() {
         return isäntä;
     }
 
@@ -60,7 +60,7 @@ public class Noodi {
     
     @Override
     public boolean equals(Object o) {
-        Noodi vertailunoodi = (Noodi) o;
+        Solmu vertailunoodi = (Solmu) o;
         if(x == vertailunoodi.getX() && y == vertailunoodi.getY() && alkuetäisyys == vertailunoodi.getAlku() && maalietäisyys == vertailunoodi.getMaali()) {
             return true;
         }

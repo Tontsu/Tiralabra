@@ -12,96 +12,101 @@ import java.util.*;
 
 public class Reitinhaku {
     
-    ArrayList<Noodi> avoinLista = new ArrayList();
-    ArrayList<Noodi> suljettuLista = new ArrayList();
+    ArrayList<Solmu> avoinLista = new ArrayList();
+    ArrayList<Solmu> suljettuLista = new ArrayList();
     
     private int lähtöpisteX;
     private int lähtöpisteY;
+    private char[][] kartta;
     
-    public Reitinhaku() {
+    public Reitinhaku(char[][] kartta) {
+        this.kartta = kartta;
         
     }
     
-    public char[][] etsiReitti(char[][] kartta, Noodi lähtöpiste, Noodi maalipiste) {
-        avoinLista.add(lähtöpiste);
-   
-        lähtöpisteX = lähtöpiste.getX();
-        lähtöpisteY = lähtöpiste.getY();
+    public char[][] etsiReitti(Solmu lähtöpiste, Solmu maalipiste) {
+        tallennaLähtöpiste(lähtöpiste);
+        laskeAlkuetäisyydetPisteille(lähtöpiste, maalipiste);
+        etsi(lähtöpiste, maalipiste);
+        lisääSuljettuunListaan(avoinLista.get(0), 0);
+        aloitaLooppi(maalipiste);
+        return rakennaReitti();
+    }
+    
+    private char[][] rakennaReitti() {
+        Solmu reittisolmu = suljettuLista.get(suljettuLista.size()-1);
+        while(reittisolmu.getIsäntä() != null) {
+            kartta[reittisolmu.getY()][reittisolmu.getX()] = 'X';
+            reittisolmu = reittisolmu.getIsäntä();
+        }
         
-        lähtöpiste.setAlku(laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpisteX, lähtöpisteY));
-        lähtöpiste.setMaali(laskeEtäisyys(lähtöpisteX, lähtöpisteY, maalipiste.getX(), maalipiste.getY()));
-        maalipiste.setAlku(laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpisteX, lähtöpisteY));
-        maalipiste.setMaali(laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), maalipiste.getX(), maalipiste.getY()));
-        
-        etsi(kartta, lähtöpiste, maalipiste);
-        
-        suljettuLista.add(avoinLista.get(0));
-        avoinLista.remove(0);
-        
-        while(!avoinLista.isEmpty()) {
-            suurin();
-            etsi(kartta, suljettuLista.get(suljettuLista.size()-1), maalipiste);
-        
+        return kartta;
+          
+    }
+    
+    private void aloitaLooppi(Solmu maalipiste) {
+         while(!avoinLista.isEmpty()) {
+            haePieninEtäisyys();
+            etsi(suljettuLista.get(suljettuLista.size()-1), maalipiste);
             if(suljettuLista.contains(maalipiste)) {
                 break;
             }
          }
         
-       Noodi reittinoodi = suljettuLista.get(suljettuLista.size()-1);
-       
-        while(reittinoodi.getIsäntä() != null) {
-            kartta[reittinoodi.getY()][reittinoodi.getX()] = 'X';
-            reittinoodi = reittinoodi.getIsäntä();
-        }
-        
-        return kartta;
     }
     
-    private void etsi(char[][] kartta, Noodi lähtöpiste, Noodi maalipiste) {
-        //Ylös
-        if(lähtöpiste.getY()-1 >= 0 && kartta[lähtöpiste.getY()-1][lähtöpiste.getX()] == '.') {
-            int etäisyysAlusta = laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpiste.getX(), lähtöpiste.getY()-1);
-            int etäisyysMaalista = laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpiste.getX(), lähtöpiste.getY()-1);
-            Noodi noodi = new Noodi(lähtöpiste.getY()-1, lähtöpiste.getX(), etäisyysAlusta, etäisyysMaalista, lähtöpiste);
-                if(!suljettuLista.contains(noodi)) {
-                    avoinLista.add(noodi);
-                }
-        }
-        //Vasemmalle
-        if(lähtöpiste.getX()-1 >= 0 && kartta[lähtöpiste.getY()][lähtöpiste.getX()-1] == '.') {
-            int etäisyysAlusta = laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpiste.getX()-1, lähtöpiste.getY());
-            int etäisyysMaalista = laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpiste.getX()-1, lähtöpiste.getY());
-            Noodi noodi = new Noodi(lähtöpiste.getY(), lähtöpiste.getX()-1, etäisyysAlusta, etäisyysMaalista, lähtöpiste);
-                if(!suljettuLista.contains(noodi)) {
-                    avoinLista.add(noodi);
-                }
-        }
-        //Oikealle
-        if(lähtöpiste.getX()+1 < kartta[0].length && kartta[lähtöpiste.getY()][lähtöpiste.getX()+1] == '.') {
-            int etäisyysAlusta = laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpiste.getX()+1, lähtöpiste.getY());
-            int etäisyysMaalista = laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpiste.getX()+1, lähtöpiste.getY());
-            Noodi noodi = new Noodi(lähtöpiste.getY(), lähtöpiste.getX()+1, etäisyysAlusta, etäisyysMaalista, lähtöpiste);
-                if(!suljettuLista.contains(noodi)) {
-                    avoinLista.add(noodi);
-                }
-        }
-        //Alas
-        if(lähtöpiste.getY()+1 < kartta.length && kartta[lähtöpiste.getY()+1][lähtöpiste.getX()] == '.') {
-            int etäisyysAlusta = laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpiste.getX(), lähtöpiste.getY()+1);
-            int etäisyysMaalista = laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpiste.getX(), lähtöpiste.getY()+1);
-            Noodi noodi = new Noodi(lähtöpiste.getY()+1, lähtöpiste.getX(), etäisyysAlusta, etäisyysMaalista, lähtöpiste);
-                if(!suljettuLista.contains(noodi)) {
-                    avoinLista.add(noodi);
-                }
-        }
+    private void tallennaLähtöpiste(Solmu lähtöpiste) {
+        avoinLista.add(lähtöpiste);
+        lähtöpisteX = lähtöpiste.getX();
+        lähtöpisteY = lähtöpiste.getY();
         
+    }
+    
+    private void laskeAlkuetäisyydetPisteille(Solmu lähtöpiste, Solmu maalipiste) {
+        lähtöpiste.setAlku(laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpisteX, lähtöpisteY));
+        lähtöpiste.setMaali(laskeEtäisyys(lähtöpisteX, lähtöpisteY, maalipiste.getX(), maalipiste.getY()));
+        maalipiste.setAlku(laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpisteX, lähtöpisteY));
+        maalipiste.setMaali(laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), maalipiste.getX(), maalipiste.getY()));
+        
+    }
+    
+    private void etsi(Solmu lähtöpiste, Solmu maalipiste) {
+        //Ylös
+        etsintälogiikka(lähtöpiste.getY()-1, lähtöpiste.getX(), lähtöpiste, maalipiste);
+        //Vasemmalle
+        etsintälogiikka(lähtöpiste.getY(), lähtöpiste.getX()-1, lähtöpiste, maalipiste);
+        //Oikealle
+        etsintälogiikka(lähtöpiste.getY(), lähtöpiste.getX()+1, lähtöpiste, maalipiste);
+        //Alas
+        etsintälogiikka(lähtöpiste.getY()+1, lähtöpiste.getX(), lähtöpiste, maalipiste);
+        
+    }
+    
+    private void etsintälogiikka(int y, int x, Solmu lähtöpiste, Solmu maalipiste) {
+        if((x >= 0 && x < kartta[0].length) && (y >= 0 && y < kartta.length) && kartta[y][x] == '.') {
+            int etäisyysAlusta = laskeEtäisyys(lähtöpisteX, lähtöpisteY, x, y);
+            int etäisyysMaalista = laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), x, y);
+            Solmu solmu = new Solmu(y, x, etäisyysAlusta, etäisyysMaalista, lähtöpiste);
+                lisääAvoimeenListaan(solmu); 
+        }
+    }
+    
+    private void lisääSuljettuunListaan(Solmu solmu, int indeksi) {
+        suljettuLista.add(solmu);
+        avoinLista.remove(indeksi);
+    }
+    
+    private void lisääAvoimeenListaan(Solmu solmu) {
+        if(!suljettuLista.contains(solmu)) {
+            avoinLista.add(solmu);
+        }
     }
      
-    private int laskeEtäisyys(int alkuX, int alkuY, int noodiX, int noodiY) {
-        return Math.abs(alkuX - noodiX) + Math.abs(alkuY - noodiY);
+    private int laskeEtäisyys(int alkuX, int alkuY, int solmuX, int solmuY) {
+        return Math.abs(alkuX - solmuX) + Math.abs(alkuY - solmuY);
     }
     
-    private void suurin() {
+    private void haePieninEtäisyys() {
         int pienin = Integer.MAX_VALUE;
         int indeksi = 0;
         for (int i = 0; i < avoinLista.size(); i++) {
@@ -110,10 +115,7 @@ public class Reitinhaku {
                 pienin = apu;
                 indeksi = i;
             }
-        }
-        
-        suljettuLista.add(avoinLista.get(indeksi));
-        avoinLista.remove(indeksi);
-        
+        } 
+        lisääSuljettuunListaan(avoinLista.get(indeksi), indeksi);
     }
 }

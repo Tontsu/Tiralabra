@@ -29,9 +29,9 @@ public static char[][] sokkelo = new char[][] {
  public static void main(String[] args) {
      
   
-        Reitinhaku reitinhaku = new Reitinhaku();
-        Noodi aloitus = new Noodi(7, 0);
-        Noodi maali = new Noodi(2, 3);
+        Reitinhaku reitinhaku = new Reitinhaku(sokkelo);
+        Solmu aloitus = new Solmu(7, 0);
+        Solmu maali = new Solmu(2, 3);
         
             for(int i = 0; i < sokkelo.length; i++) {
             System.out.println("");
@@ -40,7 +40,7 @@ public static char[][] sokkelo = new char[][] {
             }
         }
         
-        sokkelo = reitinhaku.etsiReitti(sokkelo, aloitus, maali);
+        sokkelo = reitinhaku.etsiReitti(aloitus, maali);
         
         System.out.println("");
         for(int i = 0; i < sokkelo.length; i++) {
