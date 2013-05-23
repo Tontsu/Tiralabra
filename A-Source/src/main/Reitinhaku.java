@@ -6,10 +6,15 @@ package main;
 
 /**
  *Reitinhakulogiikan luokka. A*-toteutus.
+ * Etsii lyhimmän reitin kahden pisteen väliltä.
  * @author Tontsu
  */
 import java.util.*;
 
+/**
+ *
+ * @author Tontsu
+ */
 public class Reitinhaku {
     
     ArrayList<Solmu> avoinLista = new ArrayList();
@@ -19,11 +24,21 @@ public class Reitinhaku {
     private int lähtöpisteY;
     private char[][] kartta;
     
+    /**
+     *Reitinhaun konstruktori
+     * @param kartta Kaksiulotteinen taulukko, josta etsitään reitti.
+     */
     public Reitinhaku(char[][] kartta) {
         this.kartta = kartta;
         
     }
     
+    /**
+     *Aloittaa reitin etsimisen konstruktorissa annetusta kartasta.
+     * @param lähtöpiste Mistä aloitetaan.
+     * @param maalipiste Mihin päädytään.
+     * @return Palauttaa kartan, johon on X:illä merkitty lyhin reitti.
+     */
     public char[][] etsiReitti(Solmu lähtöpiste, Solmu maalipiste) {
         tallennaLähtöpiste(lähtöpiste);
         laskeAlkuetäisyydetPisteille(lähtöpiste, maalipiste);
