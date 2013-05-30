@@ -5,7 +5,8 @@
 package main;
 
 /**
- *
+ * Prioriteettijono keolla toteutettuna.
+ * Jonolta voidaan kysyä suurimman prioriteetin alkiota vakioajassa.
  * @author Tontsu
  */
 public class Prioriteettijono {
@@ -22,18 +23,10 @@ public class Prioriteettijono {
         alkukapasiteetti = kapasiteetti;
         jono = new Solmu[alkukapasiteetti];
     }
-    
-//    private void järjestä() {
-//        int koko = häntäosoitin;
-//        for (int k = koko/2; k >= 1; k--) { 
-//            vajota(k, koko);
-//        }
-//        while(koko > 1) {
-//            vaihda(1, koko--); 
-//            vajota(1, koko);
-//        }  
-//    }
-    
+    /**
+     * Vajottaa indeksissä k olevan alkion oikealle paikalle keossa.
+     * @param k 
+     */
     private void vajota(int k) {
         while (2*k < häntäosoitin-1) {
             int j = 2*k;
@@ -48,12 +41,23 @@ public class Prioriteettijono {
         }
     }
     
+    /**
+     * Vaitaa kahden alkion paikkaa keskenään.
+     * @param i
+     * @param j 
+     */
     private void vaihda(int i, int j) {
         Solmu vaihdettava = jono[i];
         jono[i] = jono[j];
         jono[j] = vaihdettava;
     }
     
+    /**
+     * Palauttaa tiedon, onko indeksissä i olevan solmun prioriteetti pienempi kuin indeksissä j olevan solmun.
+     * @param i
+     * @param j
+     * @return True jos i on pienempi. Muuten false.
+     */
     private boolean onkoPienempi(int i, int j) {
         if (jono[i] == null) {
             return false;
@@ -61,6 +65,10 @@ public class Prioriteettijono {
         return jono[i].compareTo(jono[j]) < 0;
     }
     
+    /**
+     * Nostaa paikassa k olevan alkion oikealle paikalle keossa.
+     * @param k 
+     */
     private void kekoile(int k) {
         while (k > 0 && onkoPienempi(k/2, k)) {
             vaihda(k, k/2);
@@ -93,18 +101,18 @@ public class Prioriteettijono {
     }
     
     /**
-     * Poistaa jonon ensimmäisen solmun.
-     * @return Poistettu solmu.
+     * Palauttaa ja poistaa jonosta pienimmän prioriteetin solmun.
+     * @return Pienin solmu.
      */
     public Solmu otaPienin() {
+        if(onkoTyhjä()) {
+            return null;
+        }
         Solmu poistettava = jono[0];
         vaihda(0, häntäosoitin-1);
         jono[häntäosoitin-1] = null;
         häntäosoitin--;
         vajota(0);
-        
-        
-        
         return poistettava;
     }
     
@@ -124,6 +132,9 @@ public class Prioriteettijono {
         return jono.length;
     }
     
+    /**
+     * Kasvattaa keon kapasiteettia, jos jono kasvaa liian suureksi.
+     */
     private void kasvataJonoa() {
         Solmu[] apujono = new Solmu[jono.length*2];
         for(int i = 0; i < jono.length; i++) {
@@ -132,29 +143,29 @@ public class Prioriteettijono {
         jono = apujono;
     }
     
-    public boolean kekoehto() {
-        return tarkistaKekoehto(1);
-    }
-    
-    private boolean tarkistaKekoehto(int k) {
-        if (k > häntäosoitin) { 
-            return true;
-        }
-        int vasen = 2*k;
-        int oikea = 2*k+1;
-        if(vasen <= häntäosoitin && onkoPienempi(k, vasen)) {
-            return false;
-        }
-        if(oikea <= häntäosoitin && onkoPienempi(k, oikea)) {
-            return false;
-        }
-        return tarkistaKekoehto(vasen) && tarkistaKekoehto(oikea);
-        
-    }
-    public void print() {
-        System.out.println(häntäosoitin);
-        for (int i = 0; i < jono.length; i++) {
-            System.out.println(i + " " + jono[i]);
-        }
-    } 
+//    public boolean kekoehto() {
+//        return tarkistaKekoehto(1);
+//    }
+//    
+//    private boolean tarkistaKekoehto(int k) {
+//        if (k > häntäosoitin) { 
+//            return true;
+//        }
+//        int vasen = 2*k;
+//        int oikea = 2*k+1;
+//        if(vasen <= häntäosoitin && onkoPienempi(k, vasen)) {
+//            return false;
+//        }
+//        if(oikea <= häntäosoitin && onkoPienempi(k, oikea)) {
+//            return false;
+//        }
+//        return tarkistaKekoehto(vasen) && tarkistaKekoehto(oikea);
+//        
+//    }
+//    public void print() {
+//        System.out.println(häntäosoitin);
+//        for (int i = 0; i < jono.length; i++) {
+//            System.out.println(i + " " + jono[i]);
+//        }
+//    } 
 }

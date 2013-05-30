@@ -33,10 +33,8 @@ public class Prioriteettijonotest {
     
     @Before
     public void setUp() {
-        jono = new Prioriteettijono(5);
+        jono = new Prioriteettijono(5);   
     }
-    
-    
     @After
     public void tearDown() {
     }
@@ -46,6 +44,16 @@ public class Prioriteettijonotest {
     @Test
     public void testaaTyhjä() {
         assertEquals(true, jono.onkoTyhjä());
+    }
+    @Test
+    public void testaaOtaTyhjästä() {
+        assertEquals(null, jono.otaPienin());
+    }
+    @Test
+    public void testaaOtaYks() {
+        jono.lisää(new Solmu(10,10,10,10,new Solmu(10,9)));
+        Solmu vertailusolmu = new Solmu(10, 10, 10, 10, new Solmu(10, 9));
+        assertEquals(vertailusolmu, jono.otaPienin());
     }
     
     @Test
@@ -124,20 +132,50 @@ public class Prioriteettijonotest {
      Solmu vertailusolmu = new Solmu(10, 10, 0, 0, new Solmu(10, 9));
      assertEquals(vertailusolmu, jono.palautaPienin());
      }
+    
     @Test
     public void testaaVähänKaikkea() {
         jono.lisää(new Solmu(10,10,10,10,new Solmu(10,9)));
-        jono.lisää(new Solmu(10,10,9,9,new Solmu(10,9)));
+        jono.lisää(new Solmu(11,10,9,9,new Solmu(10,9)));
         jono.lisää(new Solmu(10,10,6,6,new Solmu(10,9)));
         jono.lisää(new Solmu(10,10,7,7,new Solmu(10,9)));
         jono.lisää(new Solmu(10,10,8,8,new Solmu(10,9)));
         jono.lisää(new Solmu(10,10,9,9,new Solmu(10,9)));
         jono.otaPienin();
+        jono.otaPienin();
+        jono.otaPienin();
         jono.lisää(new Solmu(10,10,11,11,new Solmu(10,9)));
         jono.lisää(new Solmu(10,10,4,4,new Solmu(10,9)));
         jono.otaPienin();
         jono.lisää(new Solmu(10,10,11,11,new Solmu(10,9)));
-        Solmu vertailusolmu = new Solmu(10, 10, 7, 7, new Solmu(10, 9));
+        Solmu vertailusolmu = new Solmu(11, 10, 9, 9, new Solmu(10, 9));
         assertEquals(vertailusolmu, jono.palautaPienin());
+    }
+    @Test
+    public void testaakekoilu() {
+        Solmu[] testitaulu = new Solmu[] {
+        new Solmu(10,10,5,5,new Solmu(10,9)),
+        new Solmu(10,10,6,6,new Solmu(10,9)),
+        new Solmu(10,10,7,7,new Solmu(10,9)),
+        new Solmu(10,10,8,8,new Solmu(10,9)),
+        new Solmu(10,10,9,9,new Solmu(10,9)),
+        new Solmu(10,10,10,10,new Solmu(10,9)),
+        new Solmu(10,10,11,11,new Solmu(10,9)),
+        new Solmu(10,10,12,12,new Solmu(10,9)),
+        };
+        
+        Solmu[] tulos = new Solmu[8];
+        jono.lisää(new Solmu(10,10,5,5,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,12,12,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,9,9,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,10,10,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,8,8,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,6,6,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,11,11,new Solmu(10,9)));
+        jono.lisää(new Solmu(10,10,7,7,new Solmu(10,9)));
+        for(int i = 0; i < 8; i++) {
+            tulos[i] = jono.otaPienin();
+        }
+        assertEquals(testitaulu, tulos);
     }
 }

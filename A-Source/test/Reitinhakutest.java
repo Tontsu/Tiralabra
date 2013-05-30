@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import main.Kartanrakentaja;
 import main.Solmu;
 import main.Reitinhaku;
 import org.junit.After;
@@ -19,6 +20,7 @@ import static org.junit.Assert.*;
 public class Reitinhakutest {
     char[][] sokkelo;
     Reitinhaku reitinhaku;
+    Kartanrakentaja rakentaja;
     public Reitinhakutest() {
     }
     
@@ -55,6 +57,27 @@ public class Reitinhakutest {
     //
     // @Test
     // public void hello() {}
+    
+    @Test
+    public void TestaaTyhjäOikaAlanurkkaVasenYlänurkka() {
+        char[][] odotettu = new char[][] {
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', '.', '.', '.', '.' ,'.'},
+        {'X', 'X', 'X', 'X', 'X' ,'.'},};
+        rakentaja = new Kartanrakentaja(10, 6);
+        char[][] kartta = rakentaja.getKartta();
+        Solmu aloitus = new Solmu(kartta.length-1, kartta[0].length-1);
+        Solmu maali = new Solmu(0, 0);
+        Reitinhaku haku = new Reitinhaku(kartta);
+    assertEquals(odotettu, haku.etsiReitti(aloitus, maali));
+    }
     
     @Test
     public void TestaaSokkeloAlaVasenOikeaYlös() {
@@ -127,4 +150,31 @@ public class Reitinhakutest {
         Solmu maali = new Solmu(0, 0);
     assertEquals(odotettu, reitinhaku.etsiReitti(aloitus, maali));
     }
+        @Test
+    public void TestaaSuorituskykyPieni() {
+        rakentaja = new Kartanrakentaja(100, 100);
+        char[][] kartta = rakentaja.getKartta();
+        Solmu aloitus = new Solmu(0, 0);
+        Solmu maali = new Solmu(kartta.length-1, kartta[0].length-1);
+        Reitinhaku haku = new Reitinhaku(kartta);
+        haku.etsiReitti(aloitus, maali);
+    }
+        @Test
+    public void TestaaSuorituskykyKeski() {
+        rakentaja = new Kartanrakentaja(1000, 1000);
+        char[][] kartta = rakentaja.getKartta();
+        Solmu aloitus = new Solmu(0, 0);
+        Solmu maali = new Solmu(kartta.length-1, kartta[0].length-1);
+        Reitinhaku haku = new Reitinhaku(kartta);
+        haku.etsiReitti(aloitus, maali);
+    }
+//        @Test
+//    public void TestaaSuorituskykyIso() {
+//        rakentaja = new Kartanrakentaja(10000, 10000);
+//        char[][] kartta = rakentaja.getKartta();
+//        Solmu maali = new Solmu(0, 0);
+//        Solmu aloitus = new Solmu(kartta.length-1, kartta[0].length-1);
+//        Reitinhaku haku = new Reitinhaku(kartta);
+//        haku.etsiReitti(aloitus, maali);
+//    }
 }
