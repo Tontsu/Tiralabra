@@ -42,7 +42,7 @@ public class Prioriteettijono {
     }
     
     /**
-     * Vaitaa kahden alkion paikkaa keskenään.
+     * Vaihtaa kahden alkion paikkaa keskenään.
      * @param i
      * @param j 
      */
@@ -162,10 +162,10 @@ public class Prioriteettijono {
 //        return tarkistaKekoehto(vasen) && tarkistaKekoehto(oikea);
 //        
 //    }
-//    public void print() {
-//        System.out.println(häntäosoitin);
-//        for (int i = 0; i < jono.length; i++) {
-//            System.out.println(i + " " + jono[i]);
-//        }
-//    } 
+    public void print() {
+        System.out.println(häntäosoitin);
+        for (int i = 0; i < jono.length; i++) {
+            System.out.println(i + " " + jono[i]);
+        }
+    } 
 }

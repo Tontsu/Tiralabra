@@ -5,7 +5,7 @@
 package main;
 
 /**
- *Reitinhakulogiikan luokka. A*-toteutus.
+ *Reitinhakulogiikan luokka. A*- ja Dijkstra-toteutus.
  * Etsii lyhimmän reitin kahden pisteen väliltä.
  * @author Tontsu
  */
@@ -18,18 +18,34 @@ import java.util.*;
 public class Reitinhaku {
     
     Prioriteettijono avoinLista = new Prioriteettijono(10);
-    ArrayList<Solmu> suljettuLista = new ArrayList();
-    
+    Solmu käsittelyssäOlevaSolmu;
+
     private int lähtöpisteX;
     private int lähtöpisteY;
     private char[][] kartta;
-    
+    private Boolean[][] suljettuLista;
+    private Boolean[][] avoimenApulista;
+    private Boolean löytyikö = false;
+    private Boolean dijkstra = false;
     /**
-     *Reitinhaun konstruktori
+     * Reitinhaun konstruktori, josta voi valita Dijkstran.
+     * @param kartta Kaksiulotteinen taulukko, josta etsitään reitti.
+     * @param dijkstra Annetaan true, jos alutaan käyttää Dijkstraa.
+     */
+    public Reitinhaku(char[][] kartta, boolean dijkstra) {
+        this.dijkstra = dijkstra;
+        this.kartta = kartta;       
+        suljettuLista = new Boolean[kartta.length][kartta[0].length];
+        avoimenApulista = new Boolean[kartta.length][kartta[0].length];
+    }
+    /**
+     * Reitinhaun konstruktori. 
      * @param kartta Kaksiulotteinen taulukko, josta etsitään reitti.
      */
     public Reitinhaku(char[][] kartta) {
-        this.kartta = kartta;   
+        this.kartta = kartta;       
+        suljettuLista = new Boolean[kartta.length][kartta[0].length];
+        avoimenApulista = new Boolean[kartta.length][kartta[0].length];
     }
     
     /**
@@ -39,26 +55,28 @@ public class Reitinhaku {
      * @return Palauttaa kartan, johon on X:illä merkitty lyhin reitti.
      */
     public char[][] etsiReitti(Solmu lähtöpiste, Solmu maalipiste) {
-        tallennaLähtöpiste(lähtöpiste);
         laskeAlkuetäisyydetPisteille(lähtöpiste, maalipiste);
-        etsi(lähtöpiste, maalipiste);
-        lisääSuljettuunListaan();
+        tallennaLähtöpiste(lähtöpiste);
         aloitaHaku(maalipiste);
-        return rakennaReitti();
+        if(löytyikö) {
+            return rakennaReitti();
+        }
+        else {
+            return new char[][]{{'T', 'R', 'O', 'L', 'O' ,'L'},};
+        }
     }
     /**
      * Piirtää lyhimmän reitin kartalle käymällä maalisolmun isäntäsolmut läpi.
      * @return Kartta, johon on merkitty lyhin reitti.
      */
     private char[][] rakennaReitti() {
-        Solmu reittisolmu = suljettuLista.get(suljettuLista.size()-1);
+        Solmu reittisolmu = käsittelyssäOlevaSolmu;
         while(reittisolmu.getIsäntä() != null) {
             kartta[reittisolmu.getY()][reittisolmu.getX()] = 'X';
             reittisolmu = reittisolmu.getIsäntä();
         }
         return kartta;
     }
-    
     /**
      * Alkaa hakea lyhintä reittiä maalipisteeseen.
      * Haku loppuu, jos suljettu lista sisältää maalipisteen, tai avoin lista tyhjenee.
@@ -67,13 +85,14 @@ public class Reitinhaku {
     private void aloitaHaku(Solmu maalipiste) {
         while(!avoinLista.onkoTyhjä()) {
             lisääSuljettuunListaan();
-            etsi(suljettuLista.get(suljettuLista.size()-1), maalipiste);
-            if(suljettuLista.contains(maalipiste)) {
+            etsi(käsittelyssäOlevaSolmu, maalipiste);
+            if(käsittelyssäOlevaSolmu.equals(maalipiste)) {
+                System.out.println("Löytyi");
+                löytyikö = true;
                 break;
             }
          }
     }
-    
     /**
      * Tallentaa lähtöpisteen tiedot muistiin, ja asettaa lähtöpisteen avoimeen listaan.
      * @param lähtöpiste 
@@ -89,10 +108,15 @@ public class Reitinhaku {
      * @param maalipiste 
      */
     private void laskeAlkuetäisyydetPisteille(Solmu lähtöpiste, Solmu maalipiste) {
-        lähtöpiste.setAlku(laskeEtäisyys(lähtöpisteX, lähtöpisteY, lähtöpisteX, lähtöpisteY));
-        lähtöpiste.setMaali(laskeEtäisyys(lähtöpisteX, lähtöpisteY, maalipiste.getX(), maalipiste.getY()));
-        maalipiste.setAlku(laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), lähtöpisteX, lähtöpisteY));
-        maalipiste.setMaali(laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), maalipiste.getX(), maalipiste.getY()));
+        lähtöpiste.setAlku(0);
+        if(dijkstra) {
+            lähtöpiste.setMaali(0);    
+        }
+        else {
+            lähtöpiste.setMaali(laskeEtäisyys(lähtöpisteX, lähtöpisteY, maalipiste.getX(), maalipiste.getY()));    
+        }
+        maalipiste.setAlku(0);
+        maalipiste.setMaali(0);
     }
     
     /**
@@ -101,23 +125,15 @@ public class Reitinhaku {
      * @param maalipiste maalisolmu, johon pyritään.
      */
     private void etsi(Solmu keskisolmu, Solmu maalipiste) {
-        
         //Ylös
         etsintälogiikka(keskisolmu.getY()-1, keskisolmu.getX(), keskisolmu, maalipiste);
+        //Alas
+        etsintälogiikka(keskisolmu.getY()+1, keskisolmu.getX(), keskisolmu, maalipiste);
         //Vasemmalle
         etsintälogiikka(keskisolmu.getY(), keskisolmu.getX()-1, keskisolmu, maalipiste);
         //Oikealle
         etsintälogiikka(keskisolmu.getY(), keskisolmu.getX()+1, keskisolmu, maalipiste);
-        //Alas
-        etsintälogiikka(keskisolmu.getY()+1, keskisolmu.getX(), keskisolmu, maalipiste);
-//        //alavasen
-//        etsintälogiikka(lähtöpiste.getY()+1, lähtöpiste.getX()-1, lähtöpiste, maalipiste);
-//        //alaoikea
-//        etsintälogiikka(lähtöpiste.getY()+1, lähtöpiste.getX()+1, lähtöpiste, maalipiste);
-//        //yläoikea
-//        etsintälogiikka(lähtöpiste.getY()-1, lähtöpiste.getX()+1, lähtöpiste, maalipiste);
-//        //ylävasen
-//        etsintälogiikka(lähtöpiste.getY()-1, lähtöpiste.getX()-1, lähtöpiste, maalipiste);
+    
     }
     /**
      * Etsintälogiikka tarkistaa, että koordinaatit pysyvät kartan sisällä, 
@@ -129,17 +145,26 @@ public class Reitinhaku {
      */
     private void etsintälogiikka(int y, int x, Solmu isäntäsolmu, Solmu maalipiste) {
         if((x >= 0 && x < kartta[0].length) && (y >= 0 && y < kartta.length) && kartta[y][x] == '.') {
-            int etäisyysAlusta = laskeEtäisyys(lähtöpisteX, lähtöpisteY, x, y);
-            int etäisyysMaalista = laskeEtäisyys(maalipiste.getX(), maalipiste.getY(), x, y);
-            Solmu solmu = new Solmu(y, x, etäisyysAlusta, etäisyysMaalista, isäntäsolmu);
-                lisääAvoimeenListaan(solmu); 
+            if(suljettuLista[y][x] == null) {
+            int etäisyysAlusta = isäntäsolmu.getAlku()+1;
+            int etäisyysMaalista;
+            if(dijkstra) {
+                etäisyysMaalista = 0;    
+            }
+            else {
+                etäisyysMaalista = laskeEtäisyys(x, y, maalipiste.getX(), maalipiste.getY());    
+            }
+            Solmu solmu = new Solmu(y, x, etäisyysAlusta, etäisyysMaalista, isäntäsolmu);                
+                lisääAvoimeenListaan(solmu);
+            }
         }
     }
     /**
      * Ottaa pienimmän etäisyyden solmun avoimesta listasta ja lisää sen suljettuun listaan.
      */
     private void lisääSuljettuunListaan() {
-        suljettuLista.add(avoinLista.otaPienin());
+        käsittelyssäOlevaSolmu = avoinLista.otaPienin();
+        suljettuLista[käsittelyssäOlevaSolmu.getY()][käsittelyssäOlevaSolmu.getX()] = true;
     }
     
     /**
@@ -148,19 +173,20 @@ public class Reitinhaku {
      * .
      */
     private void lisääAvoimeenListaan(Solmu solmu) {
-        if(!suljettuLista.contains(solmu)) {
-            avoinLista.lisää(solmu);
-        }
+            if(avoimenApulista[solmu.getY()][solmu.getX()] == null) {    
+                avoimenApulista[solmu.getY()][solmu.getX()] = true;
+                avoinLista.lisää(solmu);
+            }    
     }
      /**
       * Arvioi manhattan-etäisyyden kahden pisteen välille.
-      * @param alkuX Ensimmäisen arvioitavan x-koordinaatti.
-      * @param alkuY Ensimmäisen arvioitavan y-koordinaatti.
+      * @param solmuX Ensimmäisen arvioitavan x-koordinaatti.
+      * @param solmuY Ensimmäisen arvioitavan y-koordinaatti.
       * @param maaliX Toisen arvioitavan x-koordinaatti.
       * @param maaliY Toisen arvioitavan y-koordinaatti
       * @return etäisyysarvio.
       */
-    private int laskeEtäisyys(int alkuX, int alkuY, int maaliX, int maaliY) {
-        return Math.abs(alkuX - maaliX) + Math.abs(alkuY - maaliY);
+    private int laskeEtäisyys(int solmuX, int solmuY, int maaliX, int maaliY) {
+        return Math.abs(solmuX - maaliX) + Math.abs(solmuY - maaliY);
     }
 }

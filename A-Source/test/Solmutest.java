@@ -34,7 +34,7 @@ public class Solmutest {
     @Before
     public void setUp() {
     testisolmu1 = new Solmu(10, 10, 10, 10, new Solmu(10,10));
-    testisolmu2 = new Solmu(10, 10, 9, 9, new Solmu(10, 10));
+    testisolmu2 = new Solmu(10, 9, 9, 9, new Solmu(10, 10));
     testisolmu3 = new Solmu(10, 10, 10, 10, new Solmu(10,10));
     }
     

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @author Tontsu
  */
 
-public class Solmu implements Comparable {
+public class Solmu implements Comparable<Solmu> {
     
     private final int x;
     private final int y;
@@ -110,7 +110,7 @@ public class Solmu implements Comparable {
     @Override
     public boolean equals(Object o) {
         Solmu vertailusolmu = (Solmu) o;
-        if(x == vertailusolmu.getX() && y == vertailusolmu.getY() && alkuetäisyys == vertailusolmu.getAlku() && maalietäisyys == vertailusolmu.getMaali()) {
+        if(x == vertailusolmu.getX() && y == vertailusolmu.getY()) { //&& alkuetäisyys == vertailusolmu.getAlku() && maalietäisyys == vertailusolmu.getMaali()
             return true;
         }
         return false;
@@ -135,13 +135,12 @@ public class Solmu implements Comparable {
      * Muuten -1.
      */
     @Override
-    public int compareTo(Object t) {
-        Solmu vertailusolmu = (Solmu) t;
+    public int compareTo(Solmu vertailusolmu) {
         if(vertailusolmu == null) {
             return 1;
         }
-        int vertailtava = vertailusolmu.alkuetäisyys + vertailusolmu.maalietäisyys;
-        int tämäSolmu = alkuetäisyys + maalietäisyys;
+        int vertailtava = (vertailusolmu.alkuetäisyys + vertailusolmu.maalietäisyys);
+        int tämäSolmu = (alkuetäisyys + maalietäisyys);
         
         if(vertailtava == tämäSolmu) {
             return 0;
