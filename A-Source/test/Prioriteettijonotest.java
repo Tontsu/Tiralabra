@@ -3,8 +3,8 @@
  * and open the template in the editor.
  */
 
-import main.Prioriteettijono;
-import main.Solmu;
+import tira.Prioriteettijono;
+import tira.Solmu;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class Prioriteettijonotest {
     
     @Before
     public void setUp() {
-        jono = new Prioriteettijono(5);   
+        jono = new Prioriteettijono(10);   
     }
     @After
     public void tearDown() {
@@ -117,7 +117,7 @@ public class Prioriteettijonotest {
      assertEquals(vertailusolmu, jono.palautaPienin());
      }
     @Test
-     public void testaaIsoillaMäärilläSuurinEnsin() {
+     public void testaaIsoillaMaarillaSuurinEnsin() {
         for(int i = 3000000; i >= 0; i--) {
             jono.lisää(new Solmu(10,10,i,i,new Solmu(10,9)));
         }

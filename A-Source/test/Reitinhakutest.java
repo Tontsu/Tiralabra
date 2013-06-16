@@ -3,9 +3,9 @@
  * and open the template in the editor.
  */
 
-import main.Kartanrakentaja;
-import main.Solmu;
-import main.Reitinhaku;
+import tira.Kartanrakentaja;
+import tira.Solmu;
+import tira.Reitinhaku;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -112,7 +112,7 @@ public class Reitinhakutest {
     assertEquals(9, pituus);
     }
     @Test
-    public void TestaaAlhaaltaYlösEste() {
+    public void TestaaAlhaaltaYlosEste() {
         rakentaja = new Kartanrakentaja(10, 6);
         rakentaja.asetaEste(5, 3);
         rakentaja.asetaEste(5, 4);
@@ -143,7 +143,7 @@ public class Reitinhakutest {
     assertEquals(13, pituus);
     }
       @Test
-    public void TestaaYlhäältäAlasEste() {
+    public void TestaaYlhaaltaAlasEste() {
         rakentaja = new Kartanrakentaja(10, 6);
         rakentaja.asetaEste(5, 3);
         rakentaja.asetaEste(5, 4);
@@ -174,7 +174,7 @@ public class Reitinhakutest {
     }
     
     @Test
-    public void TestaaTyhjäOikeaYlänurkkaVasenAlanurkka() {
+    public void TestaaTyhjaOikeaYlanurkkaVasenAlanurkka() {
         rakentaja = new Kartanrakentaja(10, 6);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(0, kartta[0].length-1);
@@ -203,7 +203,7 @@ public class Reitinhakutest {
     }
     
     @Test
-    public void TestaaTyhjäVasenYlänurkkaOikeaAlanurkka() {
+    public void TestaaTyhjaVasenYlanurkkaOikeaAlanurkka() {
         rakentaja = new Kartanrakentaja(10, 6);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(0, 0);
@@ -231,7 +231,7 @@ public class Reitinhakutest {
     }
     
     @Test
-    public void TestaaTyhjäVasenAlanurkkaOikeaYlänurkka() {
+    public void TestaaTyhjaVasenAlanurkkaOikeaYlanurkka() {
         rakentaja = new Kartanrakentaja(10, 6);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(kartta.length-1, 0);
@@ -260,7 +260,7 @@ public class Reitinhakutest {
     }
     
     @Test
-    public void TestaaTyhjäOikeaAlanurkkaVasenYlänurkka() {
+    public void TestaaTyhjaOikeaAlanurkkaVasenYlanurkka() {
         rakentaja = new Kartanrakentaja(10, 6);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(kartta.length-1, kartta[0].length-1);
@@ -288,7 +288,7 @@ public class Reitinhakutest {
     }
     
     @Test
-    public void TestaaSokkeloAlaVasenOikeaYlös() {
+    public void TestaaSokkeloAlaVasenOikeaYlos() {
         char[][] odotettu = new char[][] {
         {'.', '#', '#', '#', '#' ,'#'},
         {'.', '#', '#', '.', '.', '#'},
@@ -313,7 +313,7 @@ public class Reitinhakutest {
     }
     
     @Test
-    public void TestaaSokkeloYläOikeaVasenAlas() {
+    public void TestaaSokkeloYlaOikeaVasenAlas() {
         char[][] odotettu = new char[][] {
         {'.', '#', '#', '#', '#' ,'#'},
         {'.', '#', '#', '.', '.', '#'},
@@ -340,7 +340,7 @@ public class Reitinhakutest {
     }
     
         @Test
-    public void TestaaSokkeloYläVasenOikeaAlas() {
+    public void TestaaSokkeloYlaVasenOikeaAlas() {
         char[][] odotettu = new char[][] {
         {'.', '#', '#', '#', '#' ,'#'},
         {'X', '#', '#', '.', '.', '#'},
@@ -366,7 +366,7 @@ public class Reitinhakutest {
     }
         
         @Test
-    public void TestaaSokkeloAlaOikeaVasenYlös() {
+    public void TestaaSokkeloAlaOikeaVasenYlos() {
         char[][] odotettu = new char[][] {
         {'X', '#', '#', '#', '#' ,'#'},
         {'X', '#', '#', '.', '.', '#'},
@@ -391,7 +391,7 @@ public class Reitinhakutest {
     assertEquals(odotettu, tulos);
     }
         @Test
-    public void TestaaIsostiOikeaYläVasenAla() {
+    public void TestaaIsostiOikeaYlaVasenAla() {
         rakentaja = new Kartanrakentaja(4000, 4000);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(0, kartta[0].length-1);
@@ -400,7 +400,7 @@ public class Reitinhakutest {
         haku.etsiReitti(aloitus, maali);
     }
         @Test
-    public void TestaaIsostiVasenAlaOikeaYlä() {
+    public void TestaaIsostiVasenAlaOikeaYla() {
         rakentaja = new Kartanrakentaja(4000, 4000);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(kartta.length-1, 0);
@@ -409,7 +409,7 @@ public class Reitinhakutest {
         haku.etsiReitti(aloitus, maali);
     }
         @Test
-    public void TestaaIsostiOikeaAlaVasenYlä() {
+    public void TestaaIsostiOikeaAlaVasenYla() {
         rakentaja = new Kartanrakentaja(4000, 4000);
         char[][] kartta = rakentaja.getKartta();
         Solmu aloitus = new Solmu(kartta.length-1, kartta[0].length-1);

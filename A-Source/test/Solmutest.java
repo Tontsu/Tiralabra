@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-import main.Solmu;
+import tira.Solmu;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
